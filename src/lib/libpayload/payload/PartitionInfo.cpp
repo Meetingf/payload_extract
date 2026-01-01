@@ -1,6 +1,6 @@
 #include <cstring>
 #include <format>
-#include <iostream>
+#include <print>
 
 #include "payload/PartitionInfo.h"
 #include "payload/Utils.h"
@@ -30,7 +30,7 @@ namespace skkk {
 	}
 
 	void PartitionInfo::printInfo() const {
-		std::cout << std::format("name: {:18s} size: {:<12} sha256: {}", name, size, newHashHexStr) << std::endl;
+		std::println("name: {:18} size: {:<12} sha256: {}", name, size, newHashHexStr);
 	}
 
 	bool PartitionInfo::checkExtractionSuccessful() const {

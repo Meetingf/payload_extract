@@ -9,7 +9,7 @@
 namespace skkk {
 	int ExtractOperation::initOldDir() const {
 		if (!dirExists(oldDir)) {
-			LOGCE("oldDir does not exist: '%s'", oldDir.c_str());
+			LOGCE("oldDir does not exist: {}", oldDir);
 			return RET_EXTRACT_INIT_FAIL;
 		}
 		return RET_EXTRACT_DONE;
@@ -36,7 +36,7 @@ namespace skkk {
 
 	int ExtractOperation::initOutConfig() {
 		if (!fileExists(outConfigPath)) {
-			LOGCE("outConfigPath does not exist: '%s'", outConfigPath.c_str());
+			LOGCE("outConfigPath does not exist: {}", outConfigPath);
 			return RET_EXTRACT_INIT_FAIL;
 		}
 		std::vector<std::string> lines;
@@ -75,7 +75,7 @@ namespace skkk {
 		if (!dirExists(outDir)) {
 			if (mkdirs(outDir.c_str(), 0755)) {
 				rc = RET_EXTRACT_CREATE_DIR_FAIL;
-				LOGCE("create out dir fail: '%s'(%s)", outDir.c_str(), strerror(errno));
+				LOGCE("create out dir fail: '{}'({})", outDir, strerror(errno));
 			}
 		}
 		return rc;

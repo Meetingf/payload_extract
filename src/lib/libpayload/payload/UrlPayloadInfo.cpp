@@ -23,7 +23,7 @@ namespace skkk {
 			if (retryCount < 3) {
 				data.clear();
 				retryCount++;
-				LOGCD("URL: download failed, retry: %d", retryCount);
+				LOGCD("URL: download failed, retry: {}", retryCount);
 				goto retry;
 			}
 		}
@@ -38,7 +38,7 @@ namespace skkk {
 		if (!ret) {
 			if (retryCount < 3) {
 				retryCount++;
-				LOGCD("URL: download failed, retry: %d", retryCount);
+				LOGCD("URL: download failed, retry: {}", retryCount);
 				goto retry;
 			}
 		}

@@ -37,10 +37,10 @@ namespace skkk {
 			if (fileDataSize > 0 && fileData) {
 				return true;
 			}
-			LOGCE("failed to mmap(%s).\n", path.c_str());
+			LOGCE("failed to mmap({}).\n", path);
 			return false;
 		}
-		LOGCE("failed to open(%s).\n", path.c_str());
+		LOGCE("failed to open({}).\n", path);
 		return false;
 	}
 
@@ -244,9 +244,9 @@ namespace skkk {
 			}
 		}
 
-		LOGCD("Partition size: %" PRId32, partitionsSize);
-		LOGCD("Minor version: %" PRIu32, manifest.minor_version());
-		LOGCD("Security patch level: %s", manifest.security_patch_level().c_str());
+		LOGCD("Partition size: {}", partitionsSize);
+		LOGCD("Minor version: {}", manifest.minor_version());
+		LOGCD("Security patch level: {}", manifest.security_patch_level());
 		return partitionsSize == partitionInfoMap.size();
 	}
 

@@ -59,7 +59,7 @@ namespace skkk {
 		auto &outDir = payloadInfo->getConfig().getOldDir();
 		if (!dirExists(outDir)) {
 			if (mkdirs(outDir.c_str(), 0755)) {
-				LOGCE("create out dir fail: '%s'(%s)", outDir.c_str(), strerror(errno));
+				LOGCE("create out dir fail: '{}'({})", outDir, strerror(errno));
 				return false;
 			}
 		}
@@ -103,8 +103,8 @@ namespace skkk {
 	}
 
 #define PRINT_PROGRESS_FMT \
-	BROWN2_BOLD "Extract: " COLOR_NONE "%s" \
-	GREEN2_BOLD "[ " COLOR_NONE RED2 "%2d%%" LOG_RESET_COLOR GREEN2_BOLD " ]" COLOR_NONE \
+	BROWN2_BOLD("Extract: ") "%s" \
+	GREEN2_BOLD("[ ") RED2("%2d%%") GREEN2_BOLD(" ]") \
 	"\r"
 
 	static std::string getPrintMsg(const std::string &partName, uint64_t partSize) {
@@ -252,15 +252,14 @@ namespace skkk {
 	}
 
 	static void printExtractConfig(uint32_t threadNum, bool isIncremental) {
-		LOGCI(GREEN2_BOLD "Using " COLOR_NONE RED2 "%" PRIu32 COLOR_NONE
-		      GREEN2_BOLD " threads, Payload " COLOR_NONE COLOR_NONE RED2 "%s" COLOR_NONE GREEN2_BOLD " mode"
-		      COLOR_NONE, threadNum, !isIncremental ? "FULL" : "INCREMENTAL");
+		LOGCI(GREEN2_BOLD("Using ") RED2("{}")
+		      GREEN2_BOLD(" threads, Payload ") RED2("{}") GREEN2_BOLD(" mode"),
+		      threadNum, !isIncremental ? "FULL" : "INCREMENTAL");
 	}
 
 	static void printExtractResult(const std::string &name, int ret) {
-		LOGCI("%-18s" BROWN2_BOLD " result: " COLOR_NONE "%s",
-		      name.c_str(), ret ? GREEN2_BOLD "success" COLOR_NONE:
-		      RED2 "fail" COLOR_NONE);
+		LOGCI("{:18}" BROWN2_BOLD(" result: ") "{}",
+		      name, ret ? GREEN2_BOLD("success") : RED2("fail"));
 	}
 
 	void PartitionWriter::extractPartitions() const {

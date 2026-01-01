@@ -47,12 +47,12 @@ namespace skkk {
 					curl_easy_setopt(curl, CURLOPT_PROXY_CAPATH, CA_PATH.c_str());
 				}
 
-				LOGCD("CA_BUNDLE=%s CA_PATH=%s", CA_BUNDLE.c_str(), CA_PATH.c_str());
+				LOGCD("CA_BUNDLE={} CA_PATH={}", CA_BUNDLE, CA_PATH);
 #elif !defined(__ANDROID__)
 				curl_easy_setopt(curl, CURLOPT_SSL_OPTIONS, CURLSSLOPT_NATIVE_CA);
 #endif
 			}
-			LOGCD("Url: SSL verification=%d", sslVerification);
+			LOGCD("Url: SSL verification={}", sslVerification);
 		}
 	}
 
@@ -88,7 +88,7 @@ namespace skkk {
 		    r.downloaded_bytes == length) {
 			return {true, r.status_code};;
 		}
-		LOGCD("download failed hc=%d msg=%s", r.status_code, r.error.message.c_str());
+		LOGCD("download failed hc={} msg={}", r.status_code, r.error.message);
 		return {false, r.status_code};
 	}
 
@@ -112,7 +112,7 @@ namespace skkk {
 		    r.downloaded_bytes == length) {
 			return {true, r.status_code};
 		}
-		LOGCD("download failed hc=%d msg=%s", r.status_code, r.error.message.c_str());
+		LOGCD("download failed hc={} msg={}", r.status_code, r.error.message);
 		return {false, r.status_code};
 	}
 
@@ -134,7 +134,7 @@ namespace skkk {
 		    r.downloaded_bytes == length) {
 			return {true, r.status_code};
 		}
-		LOGCD("download failed hc=%d msg=%s", r.status_code, r.error.message.c_str());
+		LOGCD("download failed hc={} msg={}", r.status_code, r.error.message);
 		return {false, r.status_code};;
 	}
 }

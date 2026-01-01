@@ -1,14 +1,7 @@
-#ifndef PAYLOAD_EXTRACT_LOGBASE_H
-#define PAYLOAD_EXTRACT_LOGBASE_H
+#pragma once
 
-#include <cstdarg>
-#include <cstdio>
+#include "minilog.h"
 
-/**
- *	Partial code reference：https://blog.csdn.net/m_pfly_fish/article/details/118541894
- *	Partial code reference: erofs/print.h
- */
-#define LOG_COLOR_BLACK     "30"
 #define LOG_COLOR_RED       "31"
 #define LOG_COLOR_RED2      "91"
 #define LOG_COLOR_GREEN     "32"
@@ -18,68 +11,45 @@
 #define LOG_COLOR_BLUE      "34"
 #define LOG_COLOR_BLUE2     "94"
 #define LOG_COLOR_PURPLE    "35"
+#define COLOR_NONE          "\E[m"
 
-#define LOG_COLOR(COLOR)    "\033[0;" COLOR "m"
-#define LOG_BOLD(COLOR)     "\033[1;" COLOR "m"
-#define LOG_RESET_COLOR     "\033[0m"
-
-#define RED                 LOG_COLOR(LOG_COLOR_RED)
-#define RED_BOLD            LOG_BOLD(LOG_COLOR_RED)
-#define RED2                LOG_COLOR(LOG_COLOR_RED2)
-#define RED2_BOLD           LOG_BOLD(LOG_COLOR_RED2)
-#define GREEN2_BOLD         LOG_BOLD(LOG_COLOR_GREEN2)
-#define BROWN               LOG_COLOR(LOG_COLOR_BROWN)
-#define BROWN2              LOG_COLOR(LOG_COLOR_BROWN2)
-#define BROWN2_BOLD         LOG_BOLD(LOG_COLOR_BROWN2)
-#define BROWN_BOLD          LOG_BOLD(LOG_COLOR_BROWN)
-#define BLUE                LOG_COLOR(LOG_COLOR_BLUE)
-#define BLUE_BOLD           LOG_BOLD(LOG_COLOR_BLUE)
-#define BLUE2_BOLD          LOG_BOLD(LOG_COLOR_BLUE2)
-#define COLOR_NONE          LOG_RESET_COLOR
-
-#ifndef LOG_TAG
-#define LOG_TAG             "Extract"
-#endif
-
-/**
- * _log_print
- *
- * @param fmt
- * @param ...
- */
-static inline void logPrint(const char *fmt, ...) {
-	va_list ap;
-	va_start(ap, fmt);
-	vfprintf(stdout, fmt, ap);
-	va_end(ap);
-	fflush(stdout);
-}
-
-#ifdef DEBUG
-#define EX_FUNC_LINE_FMT "%s:%d, "
-#define ex_fmt(fmt) LOG_TAG ": " EX_FUNC_LINE_FMT fmt "\n"
-#define EX_FMT_FUNC_LINE(fmt) ex_fmt(fmt), __func__, __LINE__
-#define ex_tag_color_fmt(color, fmt) color LOG_TAG ": " COLOR_NONE EX_FUNC_LINE_FMT fmt "\n"
-#define EX_TAG_C_FMT_FUNC_LINE(color, fmt) ex_tag_color_fmt(color, fmt), __func__, __LINE__
-#define LOGCD(fmt, ...) logPrint(EX_TAG_C_FMT_FUNC_LINE(BLUE2_BOLD, fmt), ##__VA_ARGS__)
-#define LOGD(fmt, ...) logPrint(EX_FMT_FUNC_LINE(fmt), ##__VA_ARGS__)
+#if defined(LOG_ENABLE_COLOR)
+#define LOG_COLOR(COLOR, fmt)        "\E[0;" COLOR "m" fmt COLOR_NONE
+#define LOG_COLOR_BOLD(COLOR, fmt)   "\E[1;" COLOR "m" fmt COLOR_NONE
 #else
-#define ex_fmt(fmt) LOG_TAG ": " fmt "\n"
-#define EX_FMT_FUNC_LINE(fmt) ex_fmt(fmt)
-#define ex_tag_color_fmt(color, fmt) color LOG_TAG ": " COLOR_NONE fmt "\n"
-#define EX_TAG_C_FMT_FUNC_LINE(color, fmt) ex_tag_color_fmt(color, fmt)
-#define LOGCD(fmt, ...) 0
-#define LOGD(fmt, ...) 0
+#define LOG_COLOR(COLOR, fmt) fmt
+#define LOG_COLOR_BOLD(COLOR, fmt) fmt
 #endif
 
-#define LOGCV(fmt, ...) logPrint(EX_TAG_C_FMT_FUNC_LINE(BLUE2_BOLD, fmt), ##__VA_ARGS__)
-#define LOGCI(fmt, ...) logPrint(EX_TAG_C_FMT_FUNC_LINE(BROWN2_BOLD, fmt), ##__VA_ARGS__)
-#define LOGCW(fmt, ...) logPrint(EX_TAG_C_FMT_FUNC_LINE(BROWN2_BOLD, fmt), ##__VA_ARGS__)
-#define LOGCE(fmt, ...) logPrint(EX_TAG_C_FMT_FUNC_LINE(RED2_BOLD, fmt), ##__VA_ARGS__)
+#define LOG_TAG(tag) minilog::set_log_tag(tag)
 
-#define LOGV(fmt, ...) logPrint(EX_FMT_FUNC_LINE(fmt), ##__VA_ARGS__)
-#define LOGI(fmt, ...) logPrint(EX_FMT_FUNC_LINE(fmt), ##__VA_ARGS__)
-#define LOGW(fmt, ...) logPrint(EX_FMT_FUNC_LINE(fmt), ##__VA_ARGS__)
-#define LOGE(fmt, ...) logPrint(EX_FMT_FUNC_LINE(fmt), ##__VA_ARGS__)
+#define RED(fmt)              LOG_COLOR(LOG_COLOR_RED, fmt)
+#define RED_BOLD(fmt)         LOG_COLOR_BOLD(LOG_COLOR_RED, fmt)
+#define RED2(fmt)             LOG_COLOR(LOG_COLOR_RED2, fmt)
+#define RED2_BOLD(fmt)        LOG_COLOR_BOLD(LOG_COLOR_RED2, fmt)
+#define GREEN2_BOLD(fmt)      LOG_COLOR_BOLD(LOG_COLOR_GREEN2, fmt)
+#define BROWN(fmt)            LOG_COLOR(LOG_COLOR_BROWN, fmt)
+#define BROWN2(fmt)           LOG_COLOR(LOG_COLOR_BROWN2, fmt)
+#define BROWN2_BOLD(fmt)      LOG_COLOR_BOLD(LOG_COLOR_BROWN2, fmt)
+#define BROWN_BOLD(fmt)       LOG_COLOR_BOLD(LOG_COLOR_BROWN, fmt)
+#define BLUE(fmt)             LOG_COLOR(LOG_COLOR_BLUE, fmt)
+#define BLUE_BOLD(fmt)        LOG_COLOR_BOLD(LOG_COLOR_BLUE, fmt)
+#define BLUE2_BOLD(fmt)       LOG_COLOR_BOLD(LOG_COLOR_BLUE2, fmt)
 
-#endif //PAYLOAD_EXTRACT_LOGBASE_H
+#ifdef LOG_DEBUG
+#define LOGCD(fmt, ...) minilog::log_debug_tag_color(fmt, ##__VA_ARGS__)
+#define LOGD(fmt, ...) minilog::log_debug(fmt, ##__VA_ARGS__)
+#else
+#define LOGCD(fmt, ...)
+#define LOGD(fmt, ...)
+#endif
+
+#define LOGCV(fmt, ...) minilog::log_verbose_tag_color(fmt, ##__VA_ARGS__)
+#define LOGCI(fmt, ...) minilog::log_info_tag_color(fmt, ##__VA_ARGS__)
+#define LOGCW(fmt, ...) minilog::log_warn_tag_color(fmt, ##__VA_ARGS__)
+#define LOGCE(fmt, ...) minilog::log_error_tag_color(fmt, ##__VA_ARGS__)
+
+#define LOGV(fmt, ...) minilog::log_verbose(fmt, ##__VA_ARGS__)
+#define LOGI(fmt, ...) minilog::log_info(fmt, ##__VA_ARGS__)
+#define LOGW(fmt, ...) minilog::log_warn(fmt, ##__VA_ARGS__)
+#define LOGE(fmt, ...) minilog::log_error(fmt, ##__VA_ARGS__)

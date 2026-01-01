@@ -1,5 +1,5 @@
 #include <cinttypes>
-#include <iostream>
+#include <print>
 #include <ranges>
 
 #include "common/LogProgress.h"
@@ -31,13 +31,13 @@ namespace skkk {
 	}
 
 #define PRINT_PROGRESS_HASH_FMT \
-	BLUE_BOLD "HASH :   " COLOR_NONE "%s" \
-	GREEN2_BOLD " [ " COLOR_NONE RED2 "%2d%%" LOG_RESET_COLOR GREEN2_BOLD " ]" COLOR_NONE \
+	BLUE_BOLD("HASH :   ") "%s" \
+	GREEN2_BOLD(" [ ") RED2("%2d%%") GREEN2_BOLD(" ]") \
 	"\r"
 
 #define PRINT_PROGRESS_FEC_FMT \
-	BLUE_BOLD "FEC  :   " COLOR_NONE "%s" \
-	GREEN2_BOLD " [ " COLOR_NONE RED2 "%2d%%" LOG_RESET_COLOR GREEN2_BOLD " ]" COLOR_NONE \
+	BLUE_BOLD("FEC  :   ") "%s" \
+	GREEN2_BOLD(" [ ") RED2("%2d%%") GREEN2_BOLD(" ]") \
 	"\r"
 
 	static std::string getPrintMsg(const std::string &partName) {
@@ -311,10 +311,8 @@ namespace skkk {
 	}
 
 	static void printVerifyResult(const std::string &name, int ret) {
-		std::string message = std::format(
-			BLUE_BOLD "Verify : " COLOR_NONE "{:18s}" BLUE_BOLD " result: " COLOR_NONE "{}",
-			name, ret ? GREEN2_BOLD "success" COLOR_NONE : RED2 "fail" COLOR_NONE);
-		std::cout << message << std::endl;
+		std::println(BLUE_BOLD("Verify : ") "{:18s}" BLUE_BOLD(" result: ") "{}",
+		             name, ret ? GREEN2_BOLD("success") : RED2("fail"));
 	}
 
 	void VerifyWriter::updateVerifyData() const {

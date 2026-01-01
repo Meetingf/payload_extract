@@ -1,6 +1,6 @@
 #include <cstdio>
 #include <getopt.h>
-#include <iostream>
+#include <print>
 #include <string>
 #include <sys/time.h>
 
@@ -19,32 +19,32 @@ using namespace skkk;
 static void usage(const ExtractOperation &eo) {
 	char buf[4096] = {};
 	snprintf(buf, sizeof(buf) - 1,
-			 BROWN "usage: [options]" COLOR_NONE "\n"
-			 "  " GREEN2_BOLD "-h, --help" COLOR_NONE "           " BROWN "Display this help and exit" COLOR_NONE "\n"
-			 "  " GREEN2_BOLD "-i, --input=[PATH]" COLOR_NONE "   " BROWN "File path or URL" COLOR_NONE "\n"
-			 "  " GREEN2_BOLD "--incremental=X" COLOR_NONE "      " BROWN "Old directory, Catalog requiring incremental patching" COLOR_NONE "\n"
-			 "  " GREEN2_BOLD "--verify-update" COLOR_NONE "      " BROWN "  In the incremental mode, The dm-verify verified file" COLOR_NONE "\n"
-			 "  "             "               "            "      " BROWN "  does not contain HASH_TREE and FEC. Only files that" COLOR_NONE "\n"
-			 "  "             "               "            "      " BROWN "  have successfully updated this information can undergo" COLOR_NONE "\n"
-			 "  "             "               "            "      " BROWN "  SHA256 verification." COLOR_NONE "\n"
-			 "  " GREEN2_BOLD "--verify-update=X" COLOR_NONE "    " BROWN "  Only Verify and update the specified targets: [boot,odm,...]" COLOR_NONE "\n"
-			 "  " GREEN2_BOLD "-p" COLOR_NONE "                   " BROWN "Print all info" COLOR_NONE "\n"
-			 "  " GREEN2_BOLD "-P, --print=X" COLOR_NONE "        " BROWN "Print the specified targets: [boot,odm,...]" COLOR_NONE "\n"
-	         "  " GREEN2_BOLD "-x" COLOR_NONE "                   " BROWN "Extract all items" COLOR_NONE "\n"
-	         "  " GREEN2_BOLD "-X, --extract=X" COLOR_NONE "      " BROWN "Extract the specified targets: [boot,odm,...]" COLOR_NONE "\n"
-	         "  " GREEN2_BOLD "-e" COLOR_NONE "                   " BROWN "Exclude mode, exclude specific targets" COLOR_NONE "\n"
-	         "  " GREEN2_BOLD "-s" COLOR_NONE "                   " BROWN "Silent mode, Don't show progress" COLOR_NONE "\n"
-	         "  " GREEN2_BOLD "-T#" COLOR_NONE "                  " BROWN "[" GREEN2_BOLD "1-%u" COLOR_NONE BROWN "] Use # threads, default: -T0, is " GREEN2_BOLD "%u" COLOR_NONE COLOR_NONE "\n"
-	         "  " GREEN2_BOLD "-k" COLOR_NONE "                   " BROWN "Skip SSL verification" COLOR_NONE "\n"
-	         "  " GREEN2_BOLD "-o, --outdir=X" COLOR_NONE "       " BROWN "Output dir" COLOR_NONE "\n"
-	         "  " GREEN2_BOLD "--out-config=X" COLOR_NONE "       " BROWN "Output config file, One config per line: [boot:/path/to/xxx]" COLOR_NONE "\n"
-	         "  " GREEN2_BOLD "-R" COLOR_NONE "                   " BROWN "Modify the URL in the remote config" COLOR_NONE "\n"
-	         "  "             "               "            "      " BROWN "  May need to specify the output directory" COLOR_NONE "\n"
-	         "  " GREEN2_BOLD "-V, --version" COLOR_NONE "        " BROWN "Print the version info" COLOR_NONE "\n",
+			 BROWN("usage: [options]") "\n"
+			 "  " GREEN2_BOLD("-h, --help") "           " BROWN("Display this help and exit") "\n"
+			 "  " GREEN2_BOLD("-i, --input=[PATH]") "   " BROWN("File path or URL") "\n"
+			 "  " GREEN2_BOLD("--incremental=X") "      " BROWN("Old directory, Catalog requiring incremental patching") "\n"
+			 "  " GREEN2_BOLD("--verify-update") "      " BROWN("  In the incremental mode, The dm-verify verified file") "\n"
+			 "  "             "               "       "      " BROWN("  does not contain HASH_TREE and FEC. Only files that") "\n"
+			 "  "             "               "       "      " BROWN("  have successfully updated this information can undergo") "\n"
+			 "  "             "               "       "      " BROWN("  SHA256 verification.") "\n"
+			 "  " GREEN2_BOLD("--verify-update=X") "    " BROWN("  Only Verify and update the specified targets: [boot,odm,...]") "\n"
+			 "  " GREEN2_BOLD("-p") "                   " BROWN("Print all info") "\n"
+			 "  " GREEN2_BOLD("-P, --print=X") "        " BROWN("Print the specified targets: [boot,odm,...]") "\n"
+	         "  " GREEN2_BOLD("-x") "                   " BROWN("Extract all items") "\n"
+	         "  " GREEN2_BOLD("-X, --extract=X") "      " BROWN("Extract the specified targets: [boot,odm,...]") "\n"
+	         "  " GREEN2_BOLD("-e") "                   " BROWN("Exclude mode, exclude specific targets") "\n"
+	         "  " GREEN2_BOLD("-s") "                   " BROWN("Silent mode, Don't show progress") "\n"
+	         "  " GREEN2_BOLD("-T#") "                  " BROWN("[") GREEN2_BOLD("1-%u") BROWN("] Use # threads, default: -T0, is ") GREEN2_BOLD("%u") "\n"
+	         "  " GREEN2_BOLD("-k") "                   " BROWN("Skip SSL verification") "\n"
+	         "  " GREEN2_BOLD("-o, --outdir=X") "       " BROWN("Output dir") "\n"
+	         "  " GREEN2_BOLD("--out-config=X") "       " BROWN("Output config file, One config per line: [boot:/path/to/xxx]") "\n"
+	         "  " GREEN2_BOLD("-R") "                   " BROWN("Modify the URL in the remote config") "\n"
+	         "  "             "               "       "      " BROWN("  May need to specify the output directory") "\n"
+	         "  " GREEN2_BOLD("-V, --version") "        " BROWN("Print the version info") "\n",
 	         eo.limitHardwareConcurrency,
 	         eo.hardwareConcurrency
 	);
-	std::cerr << buf << std::endl;
+	std::println( "{}", buf);
 }
 
 #ifndef PAYLOAD_EXTRACT_VERSION
@@ -55,8 +55,8 @@ static void usage(const ExtractOperation &eo) {
 #endif
 
 static void printVersion() {
-	printf("  " BROWN "payload_extract:" COLOR_NONE "     " RED2_BOLD PAYLOAD_EXTRACT_VERSION PAYLOAD_EXTRACT_BUILD_TIME COLOR_NONE "\n");
-	printf("  " BROWN "author:" COLOR_NONE "              " RED2_BOLD "skkk" COLOR_NONE "\n");
+	printf("  " BROWN("payload_extract:") "     " RED2_BOLD(PAYLOAD_EXTRACT_VERSION PAYLOAD_EXTRACT_BUILD_TIME) "\n");
+	printf("  " BROWN("author:") "              " RED2_BOLD("skkk") "\n");
 }
 
 static option argOptions[] = {
@@ -88,43 +88,43 @@ static int parseExtractOperation(const int argc, char **argv, ExtractOperation &
 				if (optarg) {
 					eo.setPayloadPath(optarg);
 				}
-				LOGCD("path=%s", eo.getPayloadPath().c_str());
+				LOGCD("path={}", eo.getPayloadPath());
 				break;
 			case 'k':
 				eo.sslVerification = false;
-				LOGCD("Skip SSL verification=%d", eo.sslVerification);
+				LOGCD("Skip SSL verification={}", eo.sslVerification);
 				break;
 			case 'o':
 				if (optarg) {
 					eo.setOutDir(optarg);
 				}
-				LOGCD("outDir=%s", eo.getOutDir().c_str());
+				LOGCD("outDir={}", eo.getOutDir());
 				break;
 			case 'p':
 				eo.isPrintAll = true;
-				LOGCD("isPrintAllNode=%d", eo.isPrintAll);
+				LOGCD("isPrintAllNode={}", eo.isPrintAll);
 				break;
 			case 'P':
 				eo.isPrintTarget = true;
 				if (optarg) eo.setTargetName(optarg);
-				LOGCD("isPrintTarget=%d targetPath=%s", eo.isPrintTarget, eo.getTargetName().c_str());
+				LOGCD("isPrintTarget={} targetPath={}", eo.isPrintTarget, eo.getTargetName());
 				break;
 			case 's':
 				eo.isSilent = true;
-				LOGCD("isSilent=%d", eo.isSilent);
+				LOGCD("isSilent={}", eo.isSilent);
 				break;
 			case 'x':
 				eo.isExtractAll = true;
-				LOGCD("isExtractAll=%d", eo.isExtractAll);
+				LOGCD("isExtractAll={}", eo.isExtractAll);
 				break;
 			case 'X':
 				eo.isExtractTarget = true;
 				if (optarg) eo.setTargetName(optarg);
-				LOGCD("isExtractTarget=%d targetName=%s", eo.isExtractTarget, eo.getTargetName().c_str());
+				LOGCD("isExtractTarget={} targetName={}", eo.isExtractTarget, eo.getTargetName().c_str());
 				break;
 			case 'e':
 				eo.isExcludeMode = true;
-				LOGCD("isExcludeMode=%d", eo.isExcludeMode);
+				LOGCD("isExcludeMode={}", eo.isExcludeMode);
 				break;
 			case 'T':
 				if (optarg) {
@@ -137,7 +137,7 @@ static int parseExtractOperation(const int argc, char **argv, ExtractOperation &
 				break;
 			case 'R':
 				eo.remoteUpdate = true;
-				LOGCD("remoteUpdate=%d", eo.remoteUpdate);
+				LOGCD("remoteUpdate={}", eo.remoteUpdate);
 				break;
 			case 200:
 				eo.isIncremental = true;
@@ -145,7 +145,7 @@ static int parseExtractOperation(const int argc, char **argv, ExtractOperation &
 					eo.isIncremental = true;
 					eo.setOldDir(optarg);
 				}
-				LOGCD("isIncremental=%d oldDir=%s", eo.isIncremental, eo.getOldDir().c_str());
+				LOGCD("isIncremental={} oldDir={}", eo.isIncremental, eo.getOldDir());
 				break;
 			case 201:
 				eo.isVerifyUpdate = true;
@@ -154,13 +154,13 @@ static int parseExtractOperation(const int argc, char **argv, ExtractOperation &
 						eo.setTargetName(optarg);
 					}
 				}
-				LOGCD("isVerifyUpdate=%d oldDir=%s", eo.isVerifyUpdate, eo.getOldDir().c_str());
+				LOGCD("isVerifyUpdate={} oldDir={}", eo.isVerifyUpdate, eo.getOldDir());
 				break;
 			case 202:
 				if (optarg) {
 					eo.setOutConfigPath(optarg);
 				}
-				LOGCD("outConfigPath=%s", eo.getOutConfigPath().c_str());
+				LOGCD("outConfigPath={}", eo.getOutConfigPath());
 				break;
 			default:
 				usage(eo);
@@ -176,14 +176,14 @@ static int parseExtractOperation(const int argc, char **argv, ExtractOperation &
 		}
 
 		eo.handleUrl();
-		LOGCD("isUrl=%d", eo.isUrl);
+		LOGCD("isUrl={}", eo.isUrl);
 
 		eo.initHttpDownload();
-		LOGCD("httpDownload=%d", eo.httpDownload != nullptr);
+		LOGCD("httpDownload={}", eo.httpDownload != nullptr);
 
 		if (eo.payloadType != PAYLOAD_TYPE_URL) {
 			if (!fileExists(eo.getPayloadPath())) {
-				LOGCE("payload file '%s' does not exist", eo.getPayloadPath().c_str());
+				LOGCE("payload file '{}' does not exist", eo.getPayloadPath().c_str());
 				ret = RET_EXTRACT_OPEN_FILE;
 				goto exit;
 			}
@@ -209,13 +209,13 @@ static int parseExtractOperation(const int argc, char **argv, ExtractOperation &
 
 		if (eo.threadNum > eo.limitHardwareConcurrency) {
 			ret = RET_EXTRACT_THREAD_NUM_ERROR;
-			LOGCE("Threads min: 1 , max: %u", eo.limitHardwareConcurrency);
+			LOGCE("Threads min: 1 , max: {}", eo.limitHardwareConcurrency);
 			goto exit;
 		}
 		if (eo.threadNum == 0) {
 			eo.threadNum = eo.hardwareConcurrency;
 		}
-		LOGCD("Threads num=%u", eo.threadNum);
+		LOGCD("Threads num={}", eo.threadNum);
 		ret = RET_EXTRACT_CONFIG_DONE;
 	} else {
 		usage(eo);
@@ -225,10 +225,9 @@ exit:
 }
 
 static void printOperationTime(const timeval *start, const timeval *end) {
-	LOGCI(GREEN2_BOLD "The operation took: " COLOR_NONE RED2 "%.3f" COLOR_NONE "%s",
+	LOGCI(GREEN2_BOLD("The operation took: ") RED2("{:.3f}") "{}",
 	      (end->tv_sec - start->tv_sec) + static_cast<float>(end->tv_usec - start->tv_usec) / 1000000,
-	      GREEN2_BOLD " second(s)." COLOR_NONE
-	);
+	      GREEN2_BOLD(" second(s)."));
 }
 
 #if defined(_WIN32)
@@ -272,6 +271,9 @@ int main(const int argc, char *argv[]) {
 
 	setbuf(stdout, nullptr);
 	setbuf(stderr, nullptr);
+
+	// LOG
+	LOG_TAG("Extract");
 
 	// Start time
 	gettimeofday(&start, nullptr);
@@ -327,7 +329,7 @@ int main(const int argc, char *argv[]) {
 		goto exit;
 	}
 
-	LOGCI(GREEN2_BOLD "Starting..." COLOR_NONE);
+	LOGCI(GREEN2_BOLD("Starting..."));
 
 	if (eo.isExtractAll || eo.isExtractTarget) {
 		err = eo.createExtractOutDir();

@@ -1,6 +1,4 @@
-#include <format>
 #include <memory>
-#include <iostream>
 
 #include <payload/common/io.h>
 #include <payload/LogBase.h>
@@ -26,9 +24,9 @@ namespace skkk {
 	}
 
 	static void printRemoteResult(const std::string &text, bool success) {
-		std::string message = std::format(
-			BLUE_BOLD "Remote : " COLOR_NONE "{}" "{}" COLOR_NONE, success ? GREEN2_BOLD : RED2, text);
-		std::cout << message << std::endl;
+		static auto *successFmt = BLUE_BOLD("Remote : ") GREEN2_BOLD("%s") "\n";
+		static auto *failFmt = BLUE_BOLD("Remote : ") RED2("%s") "\n";
+		printf(success ? successFmt : failFmt, text.c_str());
 	}
 
 	bool RemoteUpdater::initRemoteUpdate(bool firstStage) {

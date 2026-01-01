@@ -12,8 +12,9 @@ set(CMAKE_COLOR_DIAGNOSTICS ON)
 
 option(LIB_USE_MBEDTLS "Using MbedTLS with SHA256 or TSL. default: ON" ON)
 option(ENABLE_HTTP_CPR "Enable cpr HTTP download implementation. default: ON" ON)
-option(ENABLE_FULL_LTO "Enable full lto. default: OFF" OFF)
+option(LOG_ENABLE_COLOR "Add color when outputting logs" ON)
 option(BUILD_PAYLOAD_EXTRACT "Whether to compile the payload_extract? default: ON" ON)
+option(ENABLE_FULL_LTO "Enable full lto. default: OFF" OFF)
 
 # File options
 add_definitions(
@@ -72,6 +73,10 @@ elseif (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     list(APPEND GLOBAL_LDFLAGS_RELEASE "-Wl,-dead_strip,-S,-x")
 endif ()
 
+if (LOG_ENABLE_COLOR)
+    list(APPEND GLOBAL_CFLAGS "-DLOG_ENABLE_COLOR")
+endif ()
+
 if (CMAKE_SYSTEM_NAME MATCHES "Windows")
     list(APPEND GLOBAL_CFLAGS "-static")
     list(APPEND GLOBAL_LDFLAGS "-static")
@@ -91,7 +96,7 @@ if (CMAKE_BUILD_TYPE STREQUAL "Release")
     list(APPEND GLOBAL_LDFLAGS ${GLOBAL_LDFLAGS_RELEASE})
     add_definitions("-DNDEBUG" "-UDEBUG")
 elseif (CMAKE_BUILD_TYPE MATCHES "Debug|RelWithDebInfo")
-    list(APPEND GLOBAL_CFLAGS "-O0" "-g" "-DDEBUG")
+    list(APPEND GLOBAL_CFLAGS "-O0" "-g" "-DLOG_DEBUG")
 endif ()
 
 if (CMAKE_SYSTEM_PROCESSOR MATCHES "i686|x86_64")
