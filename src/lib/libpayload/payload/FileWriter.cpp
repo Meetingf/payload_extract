@@ -52,8 +52,7 @@ namespace skkk {
 		if (srcData) {
 			auto &dst = operation.dstExtents[0];
 			Buffer<uint8_t> destBuffer{dst.dataLength};
-			auto *destBuf = destBuffer.get();
-			if (destBuf) {
+			if (auto *destBuf = destBuffer.get()) {
 				uint64_t outDestLength = dst.dataLength;
 				ret = decompress(srcData, operation.dataLength, destBuf, outDestLength);
 				if (!ret) {
@@ -92,8 +91,7 @@ namespace skkk {
 		int ret = -1;
 		auto &dst = operation.dstExtents[0];
 		Buffer<uint8_t> srcBuffer{0, dst.dataLength};
-		auto *srcData = srcBuffer.get();
-		if (srcData) {
+		if (auto *srcData = srcBuffer.get()) {
 			ret = memcpy(outData + dst.dataOffset, srcData, dst.dataLength) ? 0 : -EIO;
 		}
 		return ret;
@@ -135,8 +133,7 @@ namespace skkk {
 		int ret = -1;
 		auto &dst = operation.dstExtents[0];
 		Buffer<uint8_t> srcBuffer{operation.srcTotalLength};
-		auto *srcData = srcBuffer.get();
-		if (srcData) {
+		if (auto *srcData = srcBuffer.get()) {
 			ret = extentsRead(inData, srcData, operation.srcExtents);
 			if (!ret) {
 				ret = memcpy(outData + dst.dataOffset, srcData, dst.dataLength) ? 0 : -EIO;
@@ -163,8 +160,7 @@ namespace skkk {
 		if (patchData) {
 			uint64_t srcTotalLength = operation.srcTotalLength;
 			Buffer<uint8_t> srcBuffer{srcTotalLength};
-			auto *srcData = srcBuffer.get();
-			if (srcData) {
+			if (auto *srcData = srcBuffer.get()) {
 				ret = extentsRead(inData, srcData, operation.srcExtents);
 				if (!ret) {
 					std::vector<uint8_t> patchedData;

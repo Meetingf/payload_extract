@@ -55,6 +55,14 @@ namespace skkk {
 				return *this;
 			}
 
+			bool operator==(std::nullptr_t) noexcept {
+				return !data_;
+			}
+
+			explicit operator bool() const noexcept {
+				return data_ != nullptr;
+			}
+
 			void reserve(uint64_t size) {
 				allocate(size);
 			}

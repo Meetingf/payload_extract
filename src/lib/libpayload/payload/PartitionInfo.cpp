@@ -56,8 +56,7 @@ namespace skkk {
 
 	void PartitionInfo::ifExcExistsWrite2File() const {
 		if (!isExtractionSuccessful) {
-			auto *file = fopen(outErrorPath.c_str(), "wb");
-			if (file) {
+			if (auto *file = fopen(outErrorPath.c_str(), "wb")) {
 				for (const auto &info: excInfos) {
 					fprintf(file, "%s\n", info.c_str());
 				}

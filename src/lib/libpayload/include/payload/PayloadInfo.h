@@ -28,7 +28,7 @@ namespace skkk {
 			const uint8_t *fileData = nullptr;
 			uint64_t payloadOffset = 0;
 			uint64_t payloadMetadataSize = 0;
-			const uint8_t *payloadMetadata = nullptr;
+			Buffer<uint8_t> payloadMetadata;
 
 		public:
 			std::vector<ZipFileItem> zipFiles;

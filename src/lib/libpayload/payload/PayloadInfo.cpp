@@ -118,22 +118,20 @@ namespace skkk {
 	}
 
 	bool PayloadInfo::parseHeader() {
-		return pHeader.parseHeader(payloadMetadata ? payloadMetadata : fileData + payloadOffset);
+		return pHeader.parseHeader(payloadMetadata ? payloadMetadata.get() : fileData + payloadOffset);
 	}
 
 	bool PayloadInfo::readManifestData() {
 		auto &inPayloadOffset = pHeader.inPayloadOffset;
 		const auto manifestSize = pHeader.manifestSize;
-		auto *manifest = static_cast<uint8_t *>(malloc(manifestSize));
-		if (manifest) {
-			const uint8_t *data = payloadMetadata
-				                      ? payloadMetadata + inPayloadOffset
-				                      : fileData + payloadOffset + inPayloadOffset;
-			if (memcpy(manifest, data, manifestSize)) {
-				pHeader.manifest = manifest;
-				inPayloadOffset += manifestSize;
-				return true;
-			}
+		auto &mf = pHeader.manifest;
+		mf.reserve(manifestSize);
+		const uint8_t *data = payloadMetadata
+			                      ? payloadMetadata.get() + inPayloadOffset
+			                      : fileData + payloadOffset + inPayloadOffset;
+		if (memcpy(mf.get(), data, manifestSize)) {
+			inPayloadOffset += manifestSize;
+			return true;
 		}
 		return false;
 	}
@@ -157,9 +155,7 @@ namespace skkk {
 	}
 
 	bool PayloadInfo::parseManifestData() {
-		auto manifestSize = pHeader.manifestSize;
-		const auto *manifestData = pHeader.manifest;
-		if (manifest.ParseFromArray(manifestData, manifestSize)) {
+		if (manifest.ParseFromArray(pHeader.manifest.get(), pHeader.manifestSize)) {
 			pHeader.blockSize = manifest.block_size();
 			return true;
 		}
@@ -267,6 +263,5 @@ namespace skkk {
 		if (!unmap(fileData, fileDataSize)) {
 			closeFd(payloadFd);
 		}
-		if (payloadMetadata) free(const_cast<uint8_t *>(payloadMetadata));
 	}
 }

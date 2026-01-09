@@ -6,6 +6,7 @@
 #include <string>
 
 #include "LogBase.h"
+#include "common/Buffer.hpp"
 
 namespace skkk {
 	/**
@@ -31,8 +32,8 @@ namespace skkk {
 			uint64_t fileFormatVersion = VERSION_0; // payload major version
 			uint64_t manifestSize = 0; // Size of protobuf DeltaArchiveManifest
 			uint32_t metadataSignatureSize = 0; // Only present if format_version >= 2:
-			uint8_t *manifest = nullptr; // char manifest[manifest_size];  protobuf
-			uint8_t *metadata_signature_message = nullptr; // char[metadata_signature_size]; protobuf
+			Buffer<uint8_t> manifest; // char manifest[manifest_size];  protobuf
+			Buffer<uint8_t> metadata_signature_message; // char[metadata_signature_size]; protobuf
 
 			uint32_t blockSize = 0; // block_size
 
@@ -42,11 +43,6 @@ namespace skkk {
 			std::string securityPatchLevel;
 
 		public:
-			~PayloadHeader() {
-				if (manifest) free(manifest);
-				if (metadata_signature_message) free(metadata_signature_message);
-			}
-
 			bool isFileFormatVersionValid() const {
 				switch (fileFormatVersion) {
 					case VERSION_0:

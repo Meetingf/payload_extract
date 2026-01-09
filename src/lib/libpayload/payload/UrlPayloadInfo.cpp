@@ -2,6 +2,7 @@
 #include "payload/LogBase.h"
 #include "payload/PayloadInfo.h"
 #include "payload/ZipParser.h"
+#include "payload/common/Buffer.hpp"
 #include "payload/common/io.h"
 
 namespace skkk {
@@ -65,8 +66,8 @@ namespace skkk {
 	}
 
 	bool UrlPayloadInfo::handleOffset() {
-		auto *data = static_cast<uint8_t *>(malloc(headerDataSize));
-		if (data) {
+		if (Buffer<uint8_t> buffer{headerDataSize}) {
+			auto *data = buffer.get();
 			FileBuffer fb{data, 0};
 			if (!download(fb, 0, headerDataSize)) {
 				LOGCE("URL: Failed to connect to the server, please try again later.");
@@ -74,20 +75,16 @@ namespace skkk {
 			}
 			if (memcmp(data, ZIP_LOCAL_FILE_HEADER_MAGIC, ZIP_LOCAL_FILE_HEADER_SIZE) == 0) {
 				if (initPayloadOffsetByZip(data)) {
-					data = static_cast<uint8_t *>(realloc(data, payloadMetadataSize));
-					if (data) {
-						fb.data = data;
-						fb.offset = 0;
-						if (!download(fb, payloadOffset, payloadMetadataSize)) {
-							LOGCE("URL: Failed to connect to the server, please try again later.");
-							return false;
-						}
-						payloadMetadata = data;
-						return true;
+					payloadMetadata.resize(payloadMetadataSize);
+					fb.data = payloadMetadata.get();
+					fb.offset = 0;
+					if (!download(fb, payloadOffset, payloadMetadataSize)) {
+						LOGCE("URL: Failed to connect to the server, please try again later.");
+						return false;
 					}
+					return true;
 				}
 			}
-			free(data);
 			if (memcmp(fileData, PAYLOAD_MAGIC, PAYLOAD_MAGIC_SIZE) == 0) {
 				return true;
 			}
