@@ -2,20 +2,20 @@
 
 #include "minilog.h"
 
-#define LOG_COLOR_RED       "31"
-#define LOG_COLOR_RED2      "91"
-#define LOG_COLOR_GREEN     "32"
-#define LOG_COLOR_GREEN2    "92"
-#define LOG_COLOR_BROWN     "33"
-#define LOG_COLOR_BROWN2    "93"
-#define LOG_COLOR_BLUE      "34"
-#define LOG_COLOR_BLUE2     "94"
-#define LOG_COLOR_PURPLE    "35"
-#define COLOR_NONE          "\E[m"
+#define LOG_COLOR_RED       ""
+#define LOG_COLOR_RED2      ""
+#define LOG_COLOR_GREEN     ""
+#define LOG_COLOR_GREEN2    ""
+#define LOG_COLOR_BROWN     ""
+#define LOG_COLOR_BROWN2    ""
+#define LOG_COLOR_BLUE      ""
+#define LOG_COLOR_BLUE2     ""
+#define LOG_COLOR_PURPLE    ""
+#define COLOR_NONE          ""
 
 #if defined(LOG_ENABLE_COLOR)
-#define LOG_COLOR(COLOR, fmt)        "\E[0;" COLOR "m" fmt COLOR_NONE
-#define LOG_COLOR_BOLD(COLOR, fmt)   "\E[1;" COLOR "m" fmt COLOR_NONE
+#define LOG_COLOR(COLOR, fmt)        fmt
+#define LOG_COLOR_BOLD(COLOR, fmt)   fmt
 #else
 #define LOG_COLOR(COLOR, fmt) fmt
 #define LOG_COLOR_BOLD(COLOR, fmt) fmt
