@@ -28,13 +28,13 @@ namespace minilog {
 	namespace details {
 #define _MINILOG_IF_HAS_ANSI_COLORS(x) x
 		inline constexpr char k_level_ansi_colors[static_cast<std::uint8_t>(log_level::error) + 1][8] = {
-			"\E[94;1m",
-			"\E[94;1m",
-			"\E[93;1m",
-			"\E[93;1m",
-			"\E[91;1m",
+			"",
+			"",
+			"",
+			"",
+			"",
 		};
-		inline constexpr char k_reset_ansi_color[4] = "\E[m";
+		inline constexpr char k_reset_ansi_color[4] = "";
 
 		inline std::string log_level_name(const log_level &lev) {
 			switch (lev) {
