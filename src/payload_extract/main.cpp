@@ -57,6 +57,7 @@ static void usage(const ExtractOperation &eo) {
 static void printVersion() {
 	printf("  " BROWN("payload_extract:") "     " RED2_BOLD(PAYLOAD_EXTRACT_VERSION PAYLOAD_EXTRACT_BUILD_TIME) "\n");
 	printf("  " BROWN("author:") "              " RED2_BOLD("skkk") "\n");
+	printf("  " BROWN("DNA工具箱定制版") "              "\n");
 }
 
 static option argOptions[] = {
