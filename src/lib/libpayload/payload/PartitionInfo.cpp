@@ -1,6 +1,7 @@
 #include <cstring>
 #include <format>
 #include <print>
+#include <cmath>  // 需要包含cmath用于计算
 
 #include "payload/PartitionInfo.h"
 #include "payload/Utils.h"
@@ -9,6 +10,21 @@ namespace skkk {
 	void FileOperation::initExcInfo(int errCode) const {
 		excInfo = std::format("name: {:18s}, type: {}, code({}): {:s}",
 		                      partName, errCode, type, strerror(abs(errCode)));
+	}
+
+	std::string formatSize(uint64_t size) {
+		if (size >= 1073741824) {
+			double sizeInGB = static_cast<double>(size) / 1073741824.0;
+			return std::format("{:.1f}G", sizeInGB);
+		} else if (size >= 1048576) {
+			double sizeInMB = static_cast<double>(size) / 1048576.0;
+			return std::format("{:.1f}MB", sizeInMB);
+		} else if (size >= 1024) {
+			double sizeInKB = static_cast<double>(size) / 1024.0;
+			return std::format("{:.0f}kb", sizeInKB);
+		} else {
+			return std::format("{}b", size);
+		}
 	}
 
 	PartitionInfo::PartitionInfo(const std::string &name, uint64_t size, const std::string &outFilePath,
@@ -30,7 +46,8 @@ namespace skkk {
 	}
 
 	void PartitionInfo::printInfo() const {
-		std::println("name: {:18} size: {:<12} sha256: {}", name, size, newHashHexStr);
+		std::string formattedSize = formatSize(size);
+		std::println("{}|{} 「大小：{}」", name, name, formattedSize);
 	}
 
 	bool PartitionInfo::checkExtractionSuccessful() const {

@@ -45,11 +45,6 @@ namespace skkk {
 	}
 
 	void PartitionWriter::printPartitionsInfo() const {
-		auto &header = payloadInfo->pHeader;
-		std::cout << std::format("PartitionSize: {:3} MinorVersion: {:2} SecurityPatchLevel: {}",
-		                         payloadInfo->partitionInfoMap.size(), header.minorVersion,
-		                         header.securityPatchLevel)
-				<< std::endl;
 		for (const auto &partition: partitions) {
 			partition.printInfo();
 		}
