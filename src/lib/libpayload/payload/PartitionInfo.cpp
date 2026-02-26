@@ -15,10 +15,10 @@ namespace skkk {
 	std::string formatSize(uint64_t size) {
 		if (size >= 1073741824) {
 			double sizeInGB = static_cast<double>(size) / 1073741824.0;
-			return std::format("{:.1f}G", sizeInGB);
+			return std::format("{:.2f}G", sizeInGB);
 		} else if (size >= 1048576) {
 			double sizeInMB = static_cast<double>(size) / 1048576.0;
-			return std::format("{:.1f}MB", sizeInMB);
+			return std::format("{:.2f}MB", sizeInMB);
 		} else if (size >= 1024) {
 			double sizeInKB = static_cast<double>(size) / 1024.0;
 			return std::format("{:.0f}kb", sizeInKB);
