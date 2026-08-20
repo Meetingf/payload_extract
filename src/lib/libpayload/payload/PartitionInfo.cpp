@@ -45,7 +45,7 @@ namespace skkk {
 		                                 newHash.size());
 	}
 
-	void PartitionInfo::printSimpleInfo(() const {
+	void PartitionInfo::printSimpleInfo() const {
 		std::string formattedSize = formatSize(size);
 		std::println("{}|{} 「大小：{}」", name, name, formattedSize);
 	}
