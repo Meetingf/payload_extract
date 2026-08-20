@@ -4,6 +4,7 @@
 #include <memory>
 #include <print>
 #include <ranges>
+#include <format>
 
 #include "common/LogProgress.h"
 #include "common/threadpool.h"
@@ -103,6 +104,22 @@ namespace skkk {
 		return verifyWriter;
 	}
 
+	static std::string formatSize(uint64_t bytes) {
+		const double gb = 1024.0 * 1024.0 * 1024.0;
+		const double mb = 1024.0 * 1024.0;
+		const double kb = 1024.0;
+		
+		if (bytes >= static_cast<uint64_t>(gb)) {
+			return std::format("{:.2f} GB", bytes / gb);
+		} else if (bytes >= static_cast<uint64_t>(mb)) {
+			return std::format("{:.2f} MB", bytes / mb);
+		} else if (bytes >= static_cast<uint64_t>(kb)) {
+			return std::format("{:.0f} KB", bytes / kb);
+		} else {
+			return std::format("{} B", bytes);
+		}
+	}
+
 #define PRINT_PROGRESS_FMT \
 	BROWN2_BOLD("Extract: ") "%s" \
 	GREEN2_BOLD("[ ") RED2("%2d%%") GREEN2_BOLD(" ]") \
@@ -110,18 +127,21 @@ namespace skkk {
 
 	static std::string getPrintMsg(const std::string &partName, uint64_t partSize) {
 		const std::string msg = std::format("{:18} size: {:<12}",
-		                                    partName, partSize);
+		                                    partName, formatSize(partSize));
 		return msg;
 	}
 
 	static void printProgressMT(bool isSilent, const std::string &partName, uint64_t partSize,
 	                            uint64_t totalSize, const std::atomic_int &progress,
 	                            bool hasEnter) {
-		if (!isSilent) {
+		if (isSilent) {
 			std::string tag = getPrintMsg(partName, partSize);
-			progressMT(PRINT_PROGRESS_FMT, tag,
-			           totalSize, progress, hasEnter);
+			LOGCI("{}", tag);
+			return;
 		}
+		std::string tag = getPrintMsg(partName, partSize);
+		progressMT(PRINT_PROGRESS_FMT, tag,
+		           totalSize, progress, hasEnter);
 	}
 
 	static bool handleData(const PartitionInfo &info, bool isIncremental, int &inFd, int &outFd,
