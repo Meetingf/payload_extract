@@ -12,7 +12,7 @@ set(CMAKE_COLOR_DIAGNOSTICS ON)
 
 option(LIB_USE_MBEDTLS "Using MbedTLS with SHA256 or TSL. default: ON" ON)
 option(ENABLE_HTTP_CPR "Enable cpr HTTP download implementation. default: ON" ON)
-option(LOG_ENABLE_COLOR "Add color when outputting logs" ON)
+option(LOG_ENABLE_COLOR "Add color when outputting logs" OFF)
 option(BUILD_PAYLOAD_EXTRACT "Whether to compile the payload_extract? default: ON" ON)
 option(ENABLE_FULL_LTO "Enable full lto. default: OFF" OFF)
 
