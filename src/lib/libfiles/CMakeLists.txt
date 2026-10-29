@@ -1,0 +1,29 @@
+set(TARGET files_static)
+
+set(TARGET_SRC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/files")
+
+set(TARGET_DEFINITIONS "_FILE_OFFSET_BITS=64")
+
+set(TARGET_CFLAGS)
+
+file(GLOB FILES_CPP_SRCS "${TARGET_SRC_DIR}/*.cpp")
+if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    file(GLOB FILES_WIN_C_SRCS "${TARGET_SRC_DIR}/win/*.c")
+    file(GLOB FILES_WIN_CPP_SRCS "${TARGET_SRC_DIR}/win/*.cpp")
+    set(FILES_WIN_SRCS ${FILES_WIN_C_SRCS} ${FILES_WIN_CPP_SRCS})
+endif ()
+
+set(FILES_SRCS
+    ${FILES_COMMON_SRCS}
+    ${FILES_CPP_SRCS}
+    ${FILES_WIN_SRCS}
+)
+
+add_library(${TARGET} STATIC ${FILES_SRCS})
+target_include_directories(${TARGET} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
+
+target_compile_definitions(${TARGET} PUBLIC ${TARGET_DEFINITIONS})
+target_compile_options(${TARGET} PRIVATE
+    "$<$<COMPILE_LANGUAGE:C>:${TARGET_CFLAGS}>"
+    "$<$<COMPILE_LANGUAGE:CXX>:${TARGET_CFLAGS}>"
+)

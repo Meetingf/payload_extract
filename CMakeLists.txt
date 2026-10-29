@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.26...4.4.2)
+cmake_minimum_required(VERSION 3.31.6)
 include(cmake/check.cmake)
 project(payload_extract LANGUAGES C CXX ASM)
 
@@ -15,13 +15,6 @@ option(ENABLE_HTTP_CPR "Enable cpr HTTP download implementation. default: ON" ON
 option(LOG_ENABLE_COLOR "Add color when outputting logs" ON)
 option(BUILD_PAYLOAD_EXTRACT "Whether to compile the payload_extract? default: ON" ON)
 option(ENABLE_FULL_LTO "Enable full lto. default: OFF" OFF)
-
-# File options
-add_definitions(
-    "-D_FILE_OFFSET_BITS=64"
-    "-D_LARGEFILE_SOURCE"
-    "-D_LARGEFILE64_SOURCE"
-)
 
 # Compile flags
 set(GLOBAL_CFLAGS

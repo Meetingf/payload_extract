@@ -3,6 +3,7 @@
 #include <print>
 #include <cmath>
 
+#include "files/io.h"
 #include "payload/PartitionInfo.h"
 #include "payload/Utils.h"
 
@@ -57,7 +58,7 @@ namespace skkk {
 	}
 
 	void PartitionInfo::initExcInfoByInitFd(const std::string &path, int errCode) const {
-		std::unique_lock lock{*mutex_};
+		std::lock_guard lock{*_mutex};
 		std::string msg = std::format("Create/Open file err: '{}', code({}): {:s}",
 		                              path, errCode, strerror(abs(errCode)));
 		excInfos.emplace_back(msg);
@@ -73,11 +74,11 @@ namespace skkk {
 
 	void PartitionInfo::ifExcExistsWrite2File() const {
 		if (!isExtractionSuccessful) {
-			if (auto *file = fopen(outErrorPath.c_str(), "wb")) {
+			if (auto *file = IO::fopenFileRW(outErrorPath)) {
 				for (const auto &info: excInfos) {
 					fprintf(file, "%s\n", info.c_str());
 				}
-				fclose(file);
+				IO::fclose(file);
 			}
 		}
 	}
